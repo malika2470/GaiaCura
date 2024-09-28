@@ -12,9 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return const MaterialApp( // to run login remover const
       debugShowCheckedModeBanner: false,
-      //home: LoginPage(),
+        //home: LoginPage(),
       home: Scanner()
     );
   }

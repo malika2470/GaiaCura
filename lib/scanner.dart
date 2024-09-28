@@ -24,24 +24,24 @@ class _ScannerState extends State<Scanner> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFFFCF6F0),
-      padding: EdgeInsets.only(top: 50, bottom: 10, left: 5, right: 5),
+      color: const Color(0xFFFCF6F0),
+      padding: const EdgeInsets.only(top: 50, bottom: 10, left: 5, right: 5),
       child: Column(
 
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Card(
             color: const Color.fromARGB(255, 221, 147, 74),
-            child: Container(
+            child: SizedBox(
               height: 70,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.scanner_outlined,
                           size: 25,
                           color: Colors.white,
@@ -57,10 +57,10 @@ class _ScannerState extends State<Scanner> {
                     },
                   ),
                   InkWell(
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.scanner_outlined,
                           size: 25,
                           color: Color(0xFFFCF6F0),
@@ -76,10 +76,10 @@ class _ScannerState extends State<Scanner> {
                     },
                   ),
                   InkWell(
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.image_outlined,
                           size: 25,
                           color: Colors.white,
@@ -108,7 +108,7 @@ class _ScannerState extends State<Scanner> {
 
           Card(
             color: const Color.fromARGB(255, 206, 221, 74),
-            child: Container(
+            child: SizedBox(
               height: 100,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
