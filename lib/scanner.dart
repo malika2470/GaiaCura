@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:gaia_cura_/RecognizerScreen.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Scanner extends StatefulWidget {
@@ -136,6 +139,13 @@ class _ScannerState extends State<Scanner> {
                     onTap: () async {
                       XFile? xfile = await imagePicker.pickImage(
                           source: ImageSource.gallery);
+                      if (xfile != null) {
+                        File image = File(xfile.path);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (ctx) {
+                          return Recognizerscreen(image);
+                        }));
+                      }
                     },
                   ),
                 ],
