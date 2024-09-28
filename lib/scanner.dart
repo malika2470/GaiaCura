@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Scanner extends StatefulWidget {
   const Scanner({super.key});
@@ -8,40 +9,35 @@ class Scanner extends StatefulWidget {
 }
 
 class _ScannerState extends State<Scanner> {
-  
+  late ImagePicker imagePicker;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    imagePicker = ImagePicker();
   }
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFFCF6F0),
-      padding: const EdgeInsets.only(top: 50, bottom: 10, left: 5, right: 5),
+      color: Color(0xFFFCF6F0),
+      padding: EdgeInsets.only(top: 50, bottom: 10, left: 5, right: 5),
       child: Column(
-
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Card(
             color: const Color.fromARGB(255, 221, 147, 74),
-            child: SizedBox(
+            child: Container(
               height: 70,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.scanner_outlined,
                           size: 25,
                           color: Colors.white,
@@ -57,10 +53,10 @@ class _ScannerState extends State<Scanner> {
                     },
                   ),
                   InkWell(
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.scanner_outlined,
                           size: 25,
                           color: Color(0xFFFCF6F0),
@@ -76,10 +72,10 @@ class _ScannerState extends State<Scanner> {
                     },
                   ),
                   InkWell(
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.image_outlined,
                           size: 25,
                           color: Colors.white,
@@ -99,16 +95,14 @@ class _ScannerState extends State<Scanner> {
             ),
           ),
           Card(
-
             color: Colors.black,
             child: Container(
-              height: MediaQuery.of(context).size.height-300,
+              height: MediaQuery.of(context).size.height - 300,
             ),
           ),
-
           Card(
             color: const Color.fromARGB(255, 206, 221, 74),
-            child: SizedBox(
+            child: Container(
               height: 100,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -139,8 +133,9 @@ class _ScannerState extends State<Scanner> {
                       size: 35,
                       color: Colors.white,
                     ),
-                    onTap: () {
-                      // write code to open gallery
+                    onTap: () async {
+                      XFile? xfile = await imagePicker.pickImage(
+                          source: ImageSource.gallery);
                     },
                   ),
                 ],
