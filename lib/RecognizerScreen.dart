@@ -46,13 +46,36 @@ class _RecognizerscreenState extends State<Recognizerscreen> {
     try {
       // Create a prompt that asks for toxicity levels of the entered ingredients
       String prompt = """
-If the ingredients contain any of these (Dioxins and Furans, Pesticide Residues, Fragrances, Phthalates, Volatile Organic Compounds (VOCs), 
-Parabens, Chlorine Bleaching Byproducts, Formaldehyde Releasing Agents, Super Absorbent Polymers (SAPs), Synthetic Fibers (Rayon), Artificial Dyes, 
-PFOA (Perfluorooctanoic acid), PFAS (Per- and polyfluoroalkyl substances), BPA (Bisphenol A)), consider them toxic.
+Evaluate the following ingredients, considering variations in spelling and context:
 
-If they contain any of these (Adhesives, Polyethylene, and Polypropylene (Plastic)) but none of the toxic ones, consider them moderate.
+1. If the ingredients contain any of the following terms or variations of them (e.g., "dioxin", "pesticides", "fragrance", etc.):
+   - Dioxins and Furans
+   - Pesticide Residues
+   - Fragrances
+   - Phthalates
+   - Volatile Organic Compounds (VOCs)
+   - Parabens
+   - Chlorine Bleaching Byproducts
+   - Formaldehyde Releasing Agents
+   - Super Absorbent Polymers (SAPs)
+   - Synthetic Fibers (Rayon)
+   - Artificial Dyes
+   - PFOA (Perfluorooctanoic acid)
+   - PFAS (Per- and polyfluoroalkyl substances)
+   - BPA (Bisphenol A)
 
-Otherwise, consider them safe: $ingredients
+   consider them **Toxic**.
+
+2. If the ingredients contain any of the following terms or variations but none of the toxic ones:
+   - Adhesives
+   - Polyethylene
+   - Polypropylene
+
+   consider them **Moderate**.
+
+3. If none of the above ingredients or their variations are present, consider them **Safe**.
+
+Only provide the classification (Toxic, Moderate, Safe) based on the provided ingredients and the name of ingredient(s) that caused to be toxic or Moderate nothing else: $ingredients
 """;
 
       // Log the prompt to see what is being sent to the API
