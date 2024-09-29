@@ -49,7 +49,7 @@ class _RecognizerscreenState extends State<Recognizerscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recognizer'),
+        title: const Text('Recognizer'),
       ),
       backgroundColor: Colors.orangeAccent,
       body: Center(
