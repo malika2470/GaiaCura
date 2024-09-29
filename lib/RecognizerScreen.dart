@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'home_page.dart';
-import 'dashboard_screen.dart'; 
+import 'dashboard_screen.dart'; // Import your DashboardScreen
 
 class Recognizerscreen extends StatefulWidget {
   final File image;
@@ -20,8 +20,7 @@ class Recognizerscreen extends StatefulWidget {
 class _RecognizerscreenState extends State<Recognizerscreen> {
   late TextRecognizer textRecognizer;
   String responseTxt = '';
-  int _selectedIndex = 1;  
-  
+  int _selectedIndex = 1; // Set default index for the nav bar
 
   @override
   void initState() {
@@ -93,7 +92,9 @@ class _RecognizerscreenState extends State<Recognizerscreen> {
         MaterialPageRoute(builder: (context) => const DashboardScreen(username: 'User')),
       );
     } else if (index == 1) {
+      // Current screen, do nothing
     } else if (index == 2) {
+      // Navigate to another screen or implement scan functionality
     }
   }
 

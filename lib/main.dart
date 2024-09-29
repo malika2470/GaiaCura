@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'auth_screen.dart'; // Import the AuthScreen
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensures binding is initialized before async operations
+  WidgetsFlutterBinding.ensureInitialized(); 
   await dotenv.load();
   runApp(const MyApp());
 }
