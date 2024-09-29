@@ -18,7 +18,7 @@ class MyButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),),
-        child: Center(
+        child: const Center(
           child: Text("Sign In",
           style: TextStyle(color: Colors.black,
           fontWeight: FontWeight.bold,

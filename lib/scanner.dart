@@ -37,10 +37,10 @@ class _ScannerState extends State<Scanner> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.scanner_outlined,
                           size: 25,
                           color: Colors.white,
@@ -56,10 +56,10 @@ class _ScannerState extends State<Scanner> {
                     },
                   ),
                   InkWell(
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.scanner_outlined,
                           size: 25,
                           color: Color(0xFFFCF6F0),
@@ -75,10 +75,10 @@ class _ScannerState extends State<Scanner> {
                     },
                   ),
                   InkWell(
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.image_outlined,
                           size: 25,
                           color: Colors.white,
