@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gaia_cura_/RecognizerScreen.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dashboard_screen.dart'; // Import the Dashboard screen
 
 class Scanner extends StatefulWidget {
   const Scanner({super.key});
@@ -16,21 +16,59 @@ class _ScannerState extends State<Scanner> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     imagePicker = ImagePicker();
   }
 
+  Future<void> captureImage() async {
+    XFile? xfile = await imagePicker.pickImage(source: ImageSource.camera);
+    if (xfile != null) {
+      File image = File(xfile.path);
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+        return Recognizerscreen(image);
+      }));
+    }
+  }
+
+  Future<void> pickImageFromGallery() async {
+    XFile? xfile = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (xfile != null) {
+      File image = File(xfile.path);
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+        return Recognizerscreen(image);
+      }));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xFFFCF6F0),
-      padding: EdgeInsets.only(top: 50, bottom: 10, left: 5, right: 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Scaffold(
+      backgroundColor: const Color(0xFFFCF6F0),
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const DashboardScreen(username: 'User')), // Replace 'User' with the actual username if needed
+            );
+          },
+        ),
+        backgroundColor: const Color.fromARGB(255, 230, 228, 228), 
+      ),
+      body: Column(
         children: [
+          Expanded(
+            child: Card(
+              color: Colors.black,
+              child: Container(
+                height: MediaQuery.of(context).size.height - 300,
+              ),
+            ),
+          ),
           Card(
-            color: const Color.fromARGB(255, 221, 147, 74),
+            color: const Color.fromARGB(255, 141, 137, 133),
             child: Container(
               height: 70,
               child: Row(
@@ -41,37 +79,18 @@ class _ScannerState extends State<Scanner> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.scanner_outlined,
-                          size: 25,
+                          Icons.camera_alt_outlined,
+                          size: 35,
                           color: Colors.white,
                         ),
                         Text(
-                          'Scan',
+                          'Camera',
                           style: TextStyle(color: Colors.white),
                         ),
                       ],
                     ),
                     onTap: () {
-                      // code to scan
-                    },
-                  ),
-                  InkWell(
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.scanner_outlined,
-                          size: 25,
-                          color: Color(0xFFFCF6F0),
-                        ),
-                        Text(
-                          'Recognize',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      // code to scan
+                      captureImage();
                     },
                   ),
                   InkWell(
@@ -80,72 +99,17 @@ class _ScannerState extends State<Scanner> {
                       children: [
                         Icon(
                           Icons.image_outlined,
-                          size: 25,
+                          size: 35,
                           color: Colors.white,
                         ),
                         Text(
-                          'Enhance',
+                          'Gallery',
                           style: TextStyle(color: Colors.white),
                         ),
                       ],
                     ),
                     onTap: () {
-                      // code to scan
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: Colors.black,
-            child: Container(
-              height: MediaQuery.of(context).size.height - 300,
-            ),
-          ),
-          Card(
-            color: const Color.fromARGB(255, 206, 221, 74),
-            child: Container(
-              height: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InkWell(
-                    child: const Icon(
-                      Icons.rotate_left,
-                      size: 35,
-                      color: Colors.white,
-                    ),
-                    onTap: () {
-                      // code to rotate camera
-                    },
-                  ),
-                  InkWell(
-                    child: const Icon(
-                      Icons.camera,
-                      size: 50,
-                      color: Colors.white,
-                    ),
-                    onTap: () {
-                      // code to capture image
-                    },
-                  ),
-                  InkWell(
-                    child: const Icon(
-                      Icons.image_outlined,
-                      size: 35,
-                      color: Colors.white,
-                    ),
-                    onTap: () async {
-                      XFile? xfile = await imagePicker.pickImage(
-                          source: ImageSource.gallery);
-                      if (xfile != null) {
-                        File image = File(xfile.path);
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (ctx) {
-                          return Recognizerscreen(image);
-                        }));
-                      }
+                      pickImageFromGallery();
                     },
                   ),
                 ],

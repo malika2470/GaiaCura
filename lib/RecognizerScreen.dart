@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'home_page.dart';
+import 'dashboard_screen.dart'; 
 
 class Recognizerscreen extends StatefulWidget {
   final File image;
+
   Recognizerscreen(this.image);
 
   @override
@@ -18,6 +20,8 @@ class Recognizerscreen extends StatefulWidget {
 class _RecognizerscreenState extends State<Recognizerscreen> {
   late TextRecognizer textRecognizer;
   String responseTxt = '';
+  int _selectedIndex = 1;  
+  
 
   @override
   void initState() {
@@ -26,70 +30,35 @@ class _RecognizerscreenState extends State<Recognizerscreen> {
     doTextRecognition();
   }
 
-  doTextRecognition() async {
+  Future<void> doTextRecognition() async {
     InputImage inputImage = InputImage.fromFile(widget.image);
     final RecognizedText recognizedText =
         await textRecognizer.processImage(inputImage);
-
     String text = recognizedText.text;
-    print(text); // Print the recognized text
 
-    // Call completionFun with the recognized text
     if (text.isNotEmpty) {
       await completionFun(text);
     }
   }
 
   Future<void> completionFun(String ingredients) async {
-    setState(() => responseTxt = 'loading...');
+    setState(() => responseTxt = 'Loading...');
 
     try {
-      // Create a prompt that asks for toxicity levels of the entered ingredients
       String prompt = """
-Evaluate the following ingredients, considering variations in spelling and context:
-
-1. If the ingredients contain any of the following terms or variations of them (e.g., "dioxin", "pesticides", "fragrance", etc.):
-   - Dioxins and Furans
-   - Pesticide Residues
-   - Fragrances
-   - Phthalates
-   - Volatile Organic Compounds (VOCs)
-   - Parabens
-   - Chlorine Bleaching Byproducts
-   - Formaldehyde Releasing Agents
-   - Super Absorbent Polymers (SAPs)
-   - Synthetic Fibers (Rayon)
-   - Artificial Dyes
-   - PFOA (Perfluorooctanoic acid)
-   - PFAS (Per- and polyfluoroalkyl substances)
-   - BPA (Bisphenol A)
-
-   consider them **Toxic**.
-
-2. If the ingredients contain any of the following terms or variations but none of the toxic ones:
-   - Adhesives
-   - Polyethylene
-   - Polypropylene
-
-   consider them **Moderate**.
-
-3. If none of the above ingredients or their variations are present, consider them **Safe**.
-
-Only provide the classification (Toxic, Moderate, Safe) based on the provided ingredients and the name of ingredient(s) that caused to be toxic or Moderate nothing else: $ingredients
-""";
-
-      // Log the prompt to see what is being sent to the API
-      print('Prompt: $prompt');
+      Evaluate the following ingredients and classify them according to these rules:
+      ...
+      Ingredients: $ingredients
+      """;
 
       final response = await http.post(
-        Uri.parse(
-            'https://api.openai.com/v1/chat/completions'), // Corrected endpoint
+        Uri.parse('https://api.openai.com/v1/chat/completions'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${dotenv.env['token']}',
         },
         body: jsonEncode({
-          "model": "gpt-3.5-turbo", // Updated model
+          "model": "gpt-3.5-turbo",
           "messages": [
             {"role": 'user', "content": prompt}
           ],
@@ -97,10 +66,6 @@ Only provide the classification (Toxic, Moderate, Safe) based on the provided in
           "temperature": 0.7,
         }),
       );
-
-      // Log the response status and body
-      print('Response Status: ${response.statusCode}');
-      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -113,10 +78,22 @@ Only provide the classification (Toxic, Moderate, Safe) based on the provided in
         setState(() => responseTxt = 'Error: ${response.statusCode}');
       }
     } catch (e) {
-      // Log the error
-      print('Error: $e');
       if (!mounted) return;
       setState(() => responseTxt = 'Error: $e');
+    }
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 0) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const DashboardScreen(username: 'User')),
+      );
+    } else if (index == 1) {
+    } else if (index == 2) {
     }
   }
 
@@ -125,21 +102,121 @@ Only provide the classification (Toxic, Moderate, Safe) based on the provided in
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recognizer'),
+        backgroundColor: Color(0xFFFCF6F0),
       ),
-      backgroundColor: Colors.orangeAccent,
-      body: Center(
+      backgroundColor: Color(0xFFFCF6F0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.file(widget.image),
-            SizedBox(height: 20),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  widget.image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             Text(
-              responseTxt,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, color: Colors.black),
+              'Classification Results:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Results:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ...responseTxt.split('\n').map((line) => Text(
+                    line,
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  )),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(
+                              recognizedIngredients: responseTxt,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('Go to Chat Bot'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, size: 30),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt, size: 30),
+            label: 'Recognize',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info, size: 30),
+            label: 'Info',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        backgroundColor: const Color(0xFFD6D6D6),
       ),
     );
   }

@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
-//import 'pages/login_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'scanner.dart';
+import 'auth_screen.dart'; // Import the AuthScreen
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
+  WidgetsFlutterBinding.ensureInitialized(); // Ensures binding is initialized before async operations
+  await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -14,10 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-        //home: LoginPage(),
-      home: Scanner()
+      title: 'GaiaCura Chatbot',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: const AuthScreen(), // Set AuthScreen as the home screen
     );
   }
 }
