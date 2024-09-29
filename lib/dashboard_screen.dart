@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart'; // Import HomePage for the chatbot option
-import 'search_products_screen.dart'; // Import SearchProductsScreen
-import 'scanner.dart'; // Import the Scanner screen
+import 'home_page.dart'; 
+import 'search_products_screen.dart'; 
+import 'scanner.dart'; 
+// import 'saved.dart'; // Comment out the import for saved.dart
 
 class DashboardScreen extends StatelessWidget {
   final String username;
@@ -11,23 +12,27 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF6F0), // Same background color as the Auth screen
+      backgroundColor: const Color(0xFFFFF6F0),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20), // Add some padding to move it higher
+            const SizedBox(height: 25),
             Text(
-              'Hello again, $username!', // Personalized welcome message
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'Hello again!', 
+              style: const TextStyle(
+                fontSize: 30, 
+                fontWeight: FontWeight.bold, 
+                color: Color(0xFF333333), 
+              ),
             ),
             const SizedBox(height: 20),
             Center(
               child: Column(
                 children: [
                   Image.asset(
-                    'lib/images/logo.jpg', // Replace with your logo file path
+                    'lib/images/logo.jpg', 
                     height: 250,
                     width: 330,
                   ),
@@ -35,9 +40,9 @@ class DashboardScreen extends StatelessWidget {
                   const Text(
                     'Caring for You, Preserving Our Planet.',
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400, 
+                      color: Color(0xFF666666), 
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -47,7 +52,7 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 30),
             Expanded(
               child: GridView.count(
-                crossAxisCount: 2, // Number of cards per row
+                crossAxisCount: 2,
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
                 children: [
@@ -64,7 +69,6 @@ class DashboardScreen extends StatelessWidget {
                     title: 'Scan',
                     icon: Icons.camera_alt_outlined,
                     onTap: () {
-                      // Navigate to Scanner screen
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => const Scanner()),
                       );
@@ -83,7 +87,12 @@ class DashboardScreen extends StatelessWidget {
                     title: 'Saved Products',
                     icon: Icons.bookmark_outline,
                     onTap: () {
-                      // Implement View saved sustainable products functionality here
+                      // Do nothing for now
+                      // You can later add functionality here
+                      // For example, you might want to show a dialog or a message
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(content: Text('Saved Products functionality coming soon!')),
+                      // );
                     },
                   ),
                 ],
@@ -118,7 +127,7 @@ class DashboardCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withOpacity(0.05), 
               spreadRadius: 2,
               blurRadius: 5,
               offset: const Offset(0, 3),
@@ -130,16 +139,16 @@ class DashboardCard extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 50,
-              color: Colors.black,
+              size: 48,
+              color: const Color(0xFF333333), 
             ),
             const SizedBox(height: 10),
             Text(
               title,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 16, 
                 fontWeight: FontWeight.w500,
-                color: Colors.black,
+                color: Color(0xFF333333), 
               ),
             ),
           ],

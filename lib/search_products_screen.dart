@@ -8,6 +8,7 @@ class SearchProductsScreen extends StatefulWidget {
 }
 
 class _SearchProductsScreenState extends State<SearchProductsScreen> {
+  // List of products
   List<Product> products = [
     Product(
       assetName: 'pads.jpg',
@@ -33,124 +34,120 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
       description: 'Leak-proof underwear',
       sustainabilityScore: 9,
     ),
+    Product(
+      assetName: 'pads2.jpg',
+      brand: 'Viv',
+      productType: 'Pads',
+      price: 12.00,
+      description: 'Bamboo Pads',
+      sustainabilityScore: 9,
+    ),
+    Product(
+      assetName: 'temp2.jpg',
+      brand: 'Viv',
+      productType: 'Pads',
+      price: 12.00,
+      description: 'Bamboo Pads',
+      sustainabilityScore: 9,
+    ),
   ];
 
-  String currentSort = 'none';
+  // Saved products dictionary
+  Map<String, Product> savedProducts = {};  
 
-  void sortProductsByPrice() {
-    setState(() {
-      if (currentSort == 'price_asc') {
-        products.sort((a, b) => b.price.compareTo(a.price));
-        currentSort = 'price_desc';
-      } else {
-        products.sort((a, b) => a.price.compareTo(b.price));
-        currentSort = 'price_asc';
-      }
-    });
+  // Other states
+  String currentSort = 'none';
+  List<Product> _filteredProducts = [];
+  TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredProducts = products;
+    _searchController.addListener(_filterProducts);
   }
 
-  void sortProductsBySustainability() {
+  // Function to filter products
+  void _filterProducts() {
     setState(() {
-      if (currentSort == 'sustainability_asc') {
-        products.sort((a, b) => b.sustainabilityScore.compareTo(a.sustainabilityScore));
-        currentSort = 'sustainability_desc';
-      } else {
-        products.sort((a, b) => a.sustainabilityScore.compareTo(b.sustainabilityScore));
-        currentSort = 'sustainability_asc';
-      }
+      _filteredProducts = products
+          .where((product) =>
+              product.productType.toLowerCase().contains(_searchController.text.toLowerCase()))
+          .toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF6F0), // Same background color as the app
       appBar: AppBar(
-        title: const Text(
-          'Search Sustainable Products',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: const Text('Search Sustainable Products', style: TextStyle(color: Colors.black)),
         backgroundColor: const Color(0xFFD6D6D6),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark, color: Colors.black),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SavedProductsScreen(savedProducts: savedProducts),
+                ),
+              );
+            },
+          ),
+        ],
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Search Bar
-            TextField(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search, color: Colors.black),
                 hintText: 'Search products...',
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              ),
-              style: const TextStyle(color: Colors.black),
-            ),
-            const SizedBox(height: 20),
-
-            // Filter Options
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Price Filter Button
-                FilterChip(
-                  label: const Text('Price'),
-                  selected: currentSort == 'price_asc' || currentSort == 'price_desc',
-                  onSelected: (bool selected) {
-                    sortProductsByPrice();
-                  },
-                  backgroundColor: Colors.white,
-                  selectedColor: Colors.green[200],
-                ),
-                // Sustainability Filter Button
-                FilterChip(
-                  label: const Text('Most Sustainable'),
-                  selected: currentSort == 'sustainability_asc' || currentSort == 'sustainability_desc',
-                  onSelected: (bool selected) {
-                    sortProductsBySustainability();
-                  },
-                  backgroundColor: Colors.white,
-                  selectedColor: Colors.green[200],
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // Product List
-            Expanded(
-              child: ListView.builder(
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return Column(
-                    children: [
-                      ProductCard(
-                        assetName: product.assetName,
-                        brand: product.brand,
-                        productType: product.productType,
-                        price: '\$${product.price.toStringAsFixed(2)}',
-                        description: product.description,
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  );
-                },
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _filteredProducts.length,
+              itemBuilder: (context, index) {
+                final product = _filteredProducts[index];
+                return Column(
+                  children: [
+                    ProductCard(
+                      assetName: product.assetName,
+                      brand: product.brand,
+                      productType: product.productType,
+                      price: '\$${product.price.toStringAsFixed(2)}',
+                      description: product.description,
+                      isSaved: savedProducts.containsKey(product.assetName),
+                      onSave: () {
+                        setState(() {
+                          if (savedProducts.containsKey(product.assetName)) {
+                            savedProducts.remove(product.assetName);
+                          } else {
+                            savedProducts[product.assetName] = product;
+                          }
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
+// Dummy Product class for demo purposes
 class Product {
   final String assetName;
   final String brand;
@@ -169,12 +166,15 @@ class Product {
   });
 }
 
+// Dummy ProductCard class for demo purposes
 class ProductCard extends StatelessWidget {
   final String assetName;
   final String brand;
   final String productType;
   final String price;
   final String description;
+  final bool isSaved;
+  final VoidCallback onSave;
 
   const ProductCard({
     super.key,
@@ -183,6 +183,8 @@ class ProductCard extends StatelessWidget {
     required this.productType,
     required this.price,
     required this.description,
+    required this.isSaved,
+    required this.onSave,
   });
 
   @override
@@ -208,7 +210,7 @@ class ProductCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.asset(
-                'lib/images/$assetName', // Construct the full path using the asset name
+                'lib/images/$assetName',
                 height: 80,
                 width: 80,
                 fit: BoxFit.cover,
@@ -254,9 +256,50 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
             ),
+            IconButton(
+              icon: Icon(
+                isSaved ? Icons.bookmark : Icons.bookmark_border,
+                color: isSaved ? Colors.green : Colors.grey,
+              ),
+              onPressed: onSave,
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+// Dummy SavedProductsScreen class for demo purposes
+class SavedProductsScreen extends StatelessWidget {
+  final Map<String, Product> savedProducts;
+
+  const SavedProductsScreen({super.key, required this.savedProducts});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Saved Products'),
+        backgroundColor: const Color(0xFFD6D6D6),
+      ),
+      body: savedProducts.isEmpty
+          ? const Center(
+              child: Text('No saved products'),
+            )
+          : ListView(
+              children: savedProducts.values.map((product) {
+                return ProductCard(
+                  assetName: product.assetName,
+                  brand: product.brand,
+                  productType: product.productType,
+                  price: '\$${product.price.toStringAsFixed(2)}',
+                  description: product.description,
+                  isSaved: true,  // All products are saved here
+                  onSave: () {},  // Do nothing since it's a saved page
+                );
+              }).toList(),
+            ),
     );
   }
 }

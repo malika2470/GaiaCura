@@ -55,7 +55,7 @@ class _ScannerState extends State<Scanner> {
             );
           },
         ),
-        backgroundColor: const Color.fromARGB(255, 230, 228, 228), 
+        backgroundColor: const Color.fromARGB(255, 241, 241, 241), 
       ),
       body: Column(
         children: [
