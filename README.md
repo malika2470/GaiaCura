@@ -8,8 +8,7 @@ Chatbot: Ask questions about sustainable period products.
 Product Search: Find organic, chemical-free period products with detailed information.
 Product Scanner: Scan products to assess their sustainability.
 Saved Products: Save your favorite sustainable products for future reference.
-Demo
-Watch the demo video to see GaiaCura in action. [Link to Demo Video]
+
 
 Getting Started
 Prerequisites
